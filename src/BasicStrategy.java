@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class BasicStrategy extends Strategy{
     public BasicStrategy() {
         setTakesInsurance(false);
@@ -13,7 +15,7 @@ public class BasicStrategy extends Strategy{
 
         while (!isRoundOver) {
             if (hand.getCards().size() == 2) {
-                if (hand.getCards().getFirst() == hand.getCards().get(1)) {
+                if (Objects.equals(hand.getCards().getFirst(), hand.getCards().get(1))) {
                     if (hand.getCards().getFirst() == 2) {
                         if (dealerHand.getCards().getFirst() >= 4 && dealerHand.getCards().getFirst() <= 7) {
                             player.splitHand(currentHand, deck);
@@ -57,11 +59,12 @@ public class BasicStrategy extends Strategy{
                                     player.splitHand(currentHand, deck);
                                     hand.addCard(deck.dealCard());
                                 }
-                                else {
+                                else if (doubleLimit <= 8) {
                                     player.doubleDown(currentHand);
                                     hand.addCard(deck.dealCard());
                                     isRoundOver = true;
                                 }
+                                else hand.addCard(deck.dealCard());
                             }
                             else {
                                 if (isDAS) {
@@ -167,12 +170,12 @@ public class BasicStrategy extends Strategy{
                 else if (hand.getSoftCards() > 0) {
                     if (hand.getValue() <= 12) hand.addCard(deck.dealCard());
                     else if (hand.getValue() == 13) {
-                        if ((dealerHand.getCards().getFirst() == 5 || dealerHand.getCards().getFirst() == 6) && doubleLimit == 0) {
+                        if ((dealerHand.getCards().getFirst() == 5 || dealerHand.getCards().getFirst() == 6) && doubleLimit == 0 && (isDAS || player.getHands().size() == 1)) {
                             player.doubleDown(currentHand);
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
                         }
-                        else if (dealerHand.getCards().getFirst() == 4 && totalDecks == 1 && doubleLimit == 0) {
+                        else if (dealerHand.getCards().getFirst() == 4 && totalDecks == 1 && doubleLimit == 0 && (isDAS || player.getHands().size() == 1)) {
                             player.doubleDown(currentHand);
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
@@ -180,12 +183,12 @@ public class BasicStrategy extends Strategy{
                         else hand.addCard(deck.dealCard());
                     }
                     else if (hand.getValue() == 14) {
-                        if ((dealerHand.getCards().getFirst() == 5 || dealerHand.getCards().getFirst() == 6) && doubleLimit == 0) {
+                        if ((dealerHand.getCards().getFirst() == 5 || dealerHand.getCards().getFirst() == 6) && doubleLimit == 0 && (isDAS || player.getHands().size() == 1)) {
                             player.doubleDown(currentHand);
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
                         }
-                        else if (dealerHand.getCards().getFirst() == 4 && doubleLimit == 0) {
+                        else if (dealerHand.getCards().getFirst() == 4 && doubleLimit == 0 && (isDAS || player.getHands().size() == 1)) {
                             if (totalDecks == 1 || (totalDecks == 2 && !isS17)) {
                                 player.doubleDown(currentHand);
                                 hand.addCard(deck.dealCard());
@@ -196,7 +199,7 @@ public class BasicStrategy extends Strategy{
                         else hand.addCard(deck.dealCard());
                     }
                     else if (hand.getValue() == 15 || hand.getValue() == 16) {
-                        if ((dealerHand.getCards().getFirst() >= 4 && dealerHand.getCards().getFirst() <= 6) && doubleLimit == 0) {
+                        if ((dealerHand.getCards().getFirst() >= 4 && dealerHand.getCards().getFirst() <= 6) && doubleLimit == 0 && (isDAS || player.getHands().size() == 1)) {
                             player.doubleDown(currentHand);
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
@@ -204,12 +207,12 @@ public class BasicStrategy extends Strategy{
                         else hand.addCard(deck.dealCard());
                     }
                     else if (hand.getValue() == 17) {
-                        if ((dealerHand.getCards().getFirst() >= 3 && dealerHand.getCards().getFirst() <= 6) && doubleLimit == 0) {
+                        if ((dealerHand.getCards().getFirst() >= 3 && dealerHand.getCards().getFirst() <= 6) && doubleLimit == 0 && (isDAS || player.getHands().size() == 1)) {
                             player.doubleDown(currentHand);
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
                         }
-                        else if (dealerHand.getCards().getFirst() == 2 && totalDecks == 1 && doubleLimit == 0) {
+                        else if (dealerHand.getCards().getFirst() == 2 && totalDecks == 1 && doubleLimit == 0 && (isDAS || player.getHands().size() == 1)) {
                             player.doubleDown(currentHand);
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
@@ -222,22 +225,21 @@ public class BasicStrategy extends Strategy{
                             if (totalDecks == 1 && isS17) isRoundOver = true;
                             else hand.addCard(deck.dealCard());
                         }
-                        else if (dealerHand.getCards().getFirst() >= 3 && dealerHand.getCards().getFirst() <= 6 && doubleLimit == 0) {
+                        else if (dealerHand.getCards().getFirst() >= 3 && dealerHand.getCards().getFirst() <= 6 && doubleLimit == 0 && (isDAS || player.getHands().size() == 1)) {
                             player.doubleDown(currentHand);
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
                         }
-                        else if (dealerHand.getCards().getFirst() == 2 && doubleLimit == 0) {
-                            if (totalDecks >= 2 && !isS17) {
+                        else if (dealerHand.getCards().getFirst() == 2 && doubleLimit == 0 && (isDAS || player.getHands().size() == 1)) {
+                            if (totalDecks >= 2 && !isS17 && (isDAS || player.getHands().size() == 1)) {
                                 player.doubleDown(currentHand);
                                 hand.addCard(deck.dealCard());
-                                isRoundOver = true;
                             }
-                            else isRoundOver = true;
+                            isRoundOver = true;
                         }
                         else isRoundOver = true;
                     }
-                    else if (hand.getValue() == 19 && (totalDecks == 1 || !isS17)) {
+                    else if (hand.getValue() == 19 && (totalDecks == 1 || !isS17) && doubleLimit == 0 && (isDAS || player.getHands().size() == 1)) {
                         player.doubleDown(currentHand);
                         hand.addCard(deck.dealCard());
                         isRoundOver = true;
@@ -247,7 +249,7 @@ public class BasicStrategy extends Strategy{
                 else {
                     if (hand.getValue() <= 7) hand.addCard(deck.dealCard());
                     else if (hand.getValue() == 8) {
-                        if (totalDecks == 1 && doubleLimit <= 8 && (dealerHand.getCards().getFirst() == 5 || dealerHand.getCards().getFirst() == 6)) {
+                        if (totalDecks == 1 && doubleLimit <= 8 && (dealerHand.getCards().getFirst() == 5 || dealerHand.getCards().getFirst() == 6) && (isDAS || player.getHands().size() == 1)) {
                             player.doubleDown(currentHand);
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
@@ -255,12 +257,12 @@ public class BasicStrategy extends Strategy{
                         else hand.addCard(deck.dealCard());
                     }
                     else if (hand.getValue() == 9) {
-                        if (doubleLimit <= 9 && (dealerHand.getCards().getFirst() >= 3 && dealerHand.getCards().getFirst() <= 6)) {
+                        if (doubleLimit <= 9 && (dealerHand.getCards().getFirst() >= 3 && dealerHand.getCards().getFirst() <= 6) && (isDAS || player.getHands().size() == 1)) {
                             player.doubleDown(currentHand);
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
                         }
-                        else if (totalDecks <= 2 && dealerHand.getCards().getFirst() == 2 && doubleLimit <= 9) {
+                        else if (totalDecks <= 2 && dealerHand.getCards().getFirst() == 2 && doubleLimit <= 9 && (isDAS || player.getHands().size() == 1)) {
                             player.doubleDown(currentHand);
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
@@ -268,7 +270,7 @@ public class BasicStrategy extends Strategy{
                         else hand.addCard(deck.dealCard());
                     }
                     else if (hand.getValue() == 10) {
-                        if (dealerHand.getCards().getFirst() <= 9) {
+                        if (dealerHand.getCards().getFirst() <= 9 && (isDAS || player.getHands().size() == 1)) {
                             player.doubleDown(currentHand);
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
@@ -276,12 +278,12 @@ public class BasicStrategy extends Strategy{
                         else hand.addCard(deck.dealCard());
                     }
                     else if (hand.getValue() == 11) {
-                        if (dealerHand.getCards().getFirst() <= 10) {
+                        if (dealerHand.getCards().getFirst() <= 10 && (isDAS || player.getHands().size() == 1)) {
                             player.doubleDown(currentHand);
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
                         }
-                        else if (dealerHand.getCards().getFirst() == 11 && (totalDecks <= 2 || !isS17)) {
+                        else if (dealerHand.getCards().getFirst() == 11 && (totalDecks <= 2 || !isS17) && (isDAS || player.getHands().size() == 1)) {
                             player.doubleDown(currentHand);
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;

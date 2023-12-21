@@ -1,19 +1,17 @@
-import java.util.LinkedList;
-
 public class Main {
     public static void main(String[] args) {
 
         // SIMULATION PARAMETERS
         final boolean isDAS = true;
-        final boolean isS17 = false;
-        final boolean isSurrender = false;
+        final boolean isS17 = true;
+        final boolean isSurrender = true;
         final double blackjackPayout = 1.5;
-        final double penetration = 0.5;
+        final double penetration = 0.2;
         final int burnCards = 1;
-        final int doubleLimit = 10;
+        final int doubleLimit = 0;
         final int playerSeat = 2;
         final int tableMin = 25;
-        final int totalDecks = 1;
+        final int totalDecks = 8;
         final int totalOtherPlayers = 0;
         final int totalRounds = 10000000;
         double progress;
@@ -22,7 +20,7 @@ public class Main {
         int tempInt;
 
         // PLAYER SETUP
-        final Player player = new Player("CAESARS DEPOSIT BONUS STRATEGY");
+        final Player player = new Player("BASIC STRATEGY");
         final Player[] players = new Player[5];
         final Player dealer = new Player("DEALER STRATEGY");
 
@@ -109,16 +107,16 @@ public class Main {
 
                     // All hands are compared to the dealer's.
                     // If a player's hand is greater than the dealer's without going over 21, he/she wins.
-                    for (int i = 0; i < players.length; i++) {
-                        if (players[i] != null) {
-                            for (int j = 0; j < players[i].getHands().size(); j++) {
-                                if (!players[i].getWagers().isEmpty()) {
-                                    if (players[i].getHands().get(j).getValue() <= 21 && (players[i].getHands().get(j).getValue() > dealer.getHands().getFirst().getValue() || dealer.getHands().getFirst().getValue() > 21))
-                                        players[i].addWinsLosses(players[i].getWagers().get(j));
-                                    else if (players[i].getHands().get(j).getValue() > 21 || (players[i].getHands().get(j).getValue() < dealer.getHands().getFirst().getValue() && dealer.getHands().getFirst().getValue() <= 21))
-                                        players[i].addWinsLosses(-1 * players[i].getWagers().get(j));
+                    for (Player value : players) {
+                        if (value != null) {
+                            for (int j = 0; j < value.getHands().size(); j++) {
+                                if (!value.getWagers().isEmpty()) {
+                                    if (value.getHands().get(j).getValue() <= 21 && (value.getHands().get(j).getValue() > dealer.getHands().getFirst().getValue() || dealer.getHands().getFirst().getValue() > 21))
+                                        value.addWinsLosses(value.getWagers().get(j));
+                                    else if (value.getHands().get(j).getValue() > 21 || (value.getHands().get(j).getValue() < dealer.getHands().getFirst().getValue() && dealer.getHands().getFirst().getValue() <= 21))
+                                        value.addWinsLosses(-1 * value.getWagers().get(j));
 
-                                    players[i].resetRound(deck); // Player clears hands and wagers.
+                                    value.resetRound(deck); // Player clears hands and wagers.
                                 }
                             }
                         }
@@ -135,11 +133,15 @@ public class Main {
             else deck.shuffle(burnCards);
         }
 
+        // Certain online casinos offer deposit bonuses, which are monetary incentives to gamble more.
+        // This block factors in the wagering requirement to calculate the total deposit bonuses earned and add to winnings.
         if (player.getStrategy().getStrategyName().equals("CAESARS DEPOSIT BONUS STRATEGY")) {
             double depositBonus = player.getTotalWagers() / 50.0;
             player.addWinsLosses(depositBonus);
         }
 
+        // Calculate the average win/loss per wager, or 'edge'.
+        // If positive, there is a player edge. If negative, there is a house edge.
         double edge = (player.getWinsLosses() / player.getTotalWagers()) * 100;
         if (edge >= 0) System.out.println("\nPlayer Edge: " + edge);
         else System.out.println("\nHouse Edge: " + edge * -1);

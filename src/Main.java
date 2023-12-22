@@ -126,9 +126,9 @@ public class Main {
                 }
 
                 currentRound++;
-                progress = (currentRound / (double) totalRounds) * 100;
-                progressRounded = (int) Math.round(progress);
-                System.out.println(progressRounded + "% complete");
+                //progress = (currentRound / (double) totalRounds) * 100;
+                //progressRounded = (int) Math.round(progress);
+                //System.out.println(progressRounded + "% complete");
             }
             else deck.shuffle(burnCards);
         }

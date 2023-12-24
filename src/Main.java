@@ -11,7 +11,7 @@ public class Main {
         int progressRounded;
         int tempInt;
 
-        Rules rules = new Rules(true, true, true, 1.5, 0.2, 1, 0, 5000, 25, 8);
+        Rules rules = new Rules(true, true, true, 1.5, 0.2, 1, 0, 5000, 25, 8); // Establish game rules.
 
         // PLAYER SETUP
         final Player player = new Player("BASIC STRATEGY");

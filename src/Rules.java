@@ -1,14 +1,14 @@
 public class Rules {
-    private boolean isDAS;
-    private boolean isS17;
-    private boolean isSurrender;
-    private double blackjackPayout;
-    private double penetration;
-    private int burnCards;
-    private int doubleLimit;
-    private int tableMax;
-    private int tableMin;
-    private int totalDecks;
+    private final boolean isDAS;
+    private final boolean isS17;
+    private final boolean isSurrender;
+    private final double blackjackPayout;
+    private final double penetration;
+    private final int burnCards;
+    private final int doubleLimit;
+    private final int tableMax;
+    private final int tableMin;
+    private final int totalDecks;
 
     public Rules(boolean isDAS, boolean isS17, boolean isSurrender, double blackjackPayout, double penetration, int burnCards, int doubleLimit, int tableMax, int tableMin, int totalDecks) {
         this.isDAS = isDAS;

@@ -8,7 +8,7 @@ public class FollowDealerStrategy extends Strategy{
         return tableMin;
     }
 
-    public void playHand(Hand hand, boolean isS17, Deck deck, Hand dealerHand, boolean isDAS, int totalDecks, Player player, int currentHand, int doubleLimit, boolean isSurrender) {
+    public void playHand(Hand hand, Deck deck, Hand dealerHand, Player player, int currentHand, Rules rules) {
         boolean isRoundOver = false;
 
         // Dealer keeps hitting until hand is greater than 17.
@@ -18,7 +18,7 @@ public class FollowDealerStrategy extends Strategy{
             if (hand.getValue() < 17) hand.addCard(deck.dealCard());
             else if (hand.getValue() > 17) isRoundOver = true;
             else {
-                if (hand.getSoftCards() > 0 && !isS17) hand.addCard(deck.dealCard());
+                if (hand.getSoftCards() > 0 && !rules.isS17()) hand.addCard(deck.dealCard());
                 else isRoundOver = true;
             }
         }

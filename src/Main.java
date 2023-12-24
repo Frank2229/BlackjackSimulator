@@ -1,23 +1,17 @@
+import java.util.LinkedList;
+
 public class Main {
     public static void main(String[] args) {
-
         // SIMULATION PARAMETERS
-        final boolean isDAS = true;
-        final boolean isS17 = true;
-        final boolean isSurrender = true;
-        final double blackjackPayout = 1.5;
-        final double penetration = 0.2;
-        final int burnCards = 1;
-        final int doubleLimit = 0;
         final int playerSeat = 2;
-        final int tableMin = 25;
-        final int totalDecks = 8;
         final int totalOtherPlayers = 0;
-        final int totalRounds = 10000000;
+        final int totalRounds = 100000;
         double progress;
         int currentRound = 0;
         int progressRounded;
         int tempInt;
+
+        Rules rules = new Rules(true, true, true, 1.5, 0.2, 1, 0, 5000, 25, 8);
 
         // PLAYER SETUP
         final Player player = new Player("BASIC STRATEGY");
@@ -34,27 +28,24 @@ public class Main {
             }
         }
 
-        Deck deck = new Deck(totalDecks, burnCards); // The deck is created, shuffled, and burn card taken.
+        Deck deck = new Deck(rules); // The deck is created, shuffled, and burn card taken.
 
         // Start simulation.
         // If the ratio of cards remaining by total cards is greater than penetration, play round. Otherwise, shuffle.
         while (currentRound < totalRounds) {
-            if (deck.getShoe().size() / (double)(deck.getShoe().size() + deck.getDiscardTray().size()) > penetration) {
-                for (Player value : players) if (value != null) value.placeWager(tableMin); // Place wagers.
+            if (deck.getShoe().size() / (double)(deck.getShoe().size() + deck.getDiscardTray().size()) > rules.getPenetration()) {
+                for (Player value : players) if (value != null) value.placeWager(rules.getTableMin()); // Place wagers.
 
                 // Deal initial two cards.
                 for (int j = 0; j < 2; j++) {
                     for (Player value : players) if (value != null) value.getHands().getFirst().addCard(deck.dealCard());
+
                     dealer.getHands().getFirst().addCard(deck.dealCard());
                 }
 
                 // If dealer has an 11 showing, offer insurance.
                 if (dealer.getHands().getFirst().getCards().getFirst() == 11) {
-                    for (Player value : players) {
-                        if (value != null) {
-                            if (value.getStrategy().isTakesInsurance()) value.placeInsuranceWager();
-                        }
-                    }
+                    for (Player value : players) if (value != null) if (value.getStrategy().isTakesInsurance()) value.placeInsuranceWager();
                 }
 
                 // If the dealer has 21, the round ends.
@@ -77,14 +68,14 @@ public class Main {
 
                             // If the player has a blackjack, he/she is paid out. Otherwise, play hand.
                             if (value.getHands().getFirst().getValue() == 21) {
-                                value.addWinsLosses(blackjackPayout * value.getWagers().getFirst());
+                                value.addWinsLosses(rules.getBlackjackPayout() * value.getWagers().getFirst());
                                 value.resetRound(deck);
                             }
-                            else playHand(value, isS17, deck, dealer, isDAS, totalDecks, 0, doubleLimit, isSurrender);
+                            else playHand(value, deck, dealer, 0, rules);
                         }
                     }
 
-                    dealer.getStrategy().playHand(dealer.getHands().getFirst(), isS17, deck, dealer.getHands().getFirst(), isDAS, totalDecks, dealer, 0, doubleLimit, isSurrender); // After all hands are played, dealer plays hand.
+                    dealer.getStrategy().playHand(dealer.getHands().getFirst(), deck, dealer.getHands().getFirst(), dealer, 0, rules); // After all hands are played, dealer plays hand.
 
                     //LinkedList<String> playerHandsStrings = new LinkedList<>();
                     //StringBuilder tempString;
@@ -130,7 +121,7 @@ public class Main {
                 //progressRounded = (int) Math.round(progress);
                 //System.out.println(progressRounded + "% complete");
             }
-            else deck.shuffle(burnCards);
+            else deck.shuffle(rules.getBurnCards());
         }
 
         // Certain online casinos offer deposit bonuses, which are monetary incentives to gamble more.
@@ -147,10 +138,49 @@ public class Main {
         else System.out.println("\nHouse Edge: " + edge * -1);
     }
 
-    public static void playHand(Player player, boolean isS17, Deck deck, Player dealer, boolean isDAS, int totalDecks, int currentHand, int doubleLimit, boolean isSurrender) {
+    public static int adjustCount(int[] countValues, int card, int runningCount) {
+        int temp = runningCount;
+
+        switch (card) {
+            case 2:
+                temp += countValues[0];
+                break;
+            case 3:
+                temp += countValues[1];
+                break;
+            case 4:
+                temp += countValues[2];
+                break;
+            case 5:
+                temp += countValues[3];
+                break;
+            case 6:
+                temp += countValues[4];
+                break;
+            case 7:
+                temp += countValues[5];
+                break;
+            case 8:
+                temp += countValues[6];
+                break;
+            case 9:
+                temp += countValues[7];
+                break;
+            case 10:
+                temp += countValues[8];
+                break;
+            case 11:
+                temp += countValues[9];
+                break;
+        }
+
+        return temp;
+    }
+
+    public static void playHand(Player player, Deck deck, Player dealer, int currentHand, Rules rules) {
         int tempInt = currentHand;
-        player.getStrategy().playHand(player.getHands().getFirst(), isS17, deck, dealer.getHands().getFirst(), isDAS, totalDecks, player, tempInt, doubleLimit, isSurrender);
+        player.getStrategy().playHand(player.getHands().getFirst(), deck, dealer.getHands().getFirst(), player, tempInt, rules);
         tempInt++;
-        if (tempInt < player.getHands().size())playHand(player, isS17, deck, dealer, isDAS, totalDecks, tempInt, doubleLimit, isSurrender);
+        if (tempInt < player.getHands().size())playHand(player, deck, dealer, tempInt, rules);
     }
 }

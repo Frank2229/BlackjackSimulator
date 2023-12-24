@@ -5,9 +5,9 @@ public class Deck {
     final private Stack<Integer> discardTray = new Stack<>();
     final private Stack<Integer> shoe = new Stack<>();
 
-    public Deck(int totalDecks, int burnCards) {
+    public Deck(Rules rules) {
         // Assemble contents of the playing shoe. Each element represents individual card values.
-        for (int i = 0; i < totalDecks; i++) {
+        for (int i = 0; i < rules.getTotalDecks(); i++) {
             for (int j = 0; j < 4; j++) {
                 for (int k = 2; k < 15; k ++) {
                     if (k < 11) shoe.add(k); // 2 - 10
@@ -17,7 +17,7 @@ public class Deck {
             }
         }
 
-        shuffle(burnCards);
+        shuffle(rules.getBurnCards());
     }
 
     public int dealCard() {

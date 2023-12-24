@@ -12,7 +12,7 @@ public abstract class Strategy {
         return takesInsurance;
     }
 
-    public abstract void playHand(Hand hand, boolean isS17, Deck deck, Hand dealerHand, boolean isDAS, int totalDecks, Player player, int currentHand, int doubleLimit, boolean isSurrender);
+    public abstract void playHand(Hand hand, Deck deck, Hand dealerHand, Player player, int currentHand, Rules rules);
 
     public void setStrategyName(String strategyName) { this.strategyName = strategyName; }
 

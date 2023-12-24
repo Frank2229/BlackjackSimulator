@@ -8,7 +8,7 @@ public class StandStrategy extends Strategy{
         return tableMin;
     }
 
-    public void playHand(Hand hand, boolean isS17, Deck deck, Hand dealerHand, boolean isDAS, int totalDecks, Player player, int currentHand, int doubleLimit, boolean isSurrender) {
+    public void playHand(Hand hand, Deck deck, Hand dealerHand, Player player, int currentHand, Rules rules) {
 
     }
 }

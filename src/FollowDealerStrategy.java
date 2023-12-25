@@ -2,9 +2,10 @@ public class FollowDealerStrategy extends Strategy{
     public FollowDealerStrategy() {
         setTakesInsurance(false);
         setStrategyName("FOLLOW DEALER STRATEGY");
+        for (int i = 0; i < 10; i++) setCountValue(i, 0);
     }
 
-    public int calculateWager(int tableMin) {
+    public int calculateWager(int tableMin, int tableMax) {
         return tableMin;
     }
 

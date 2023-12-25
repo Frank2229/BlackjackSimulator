@@ -2,7 +2,7 @@ public class DealerStrategy extends Strategy{
     public DealerStrategy() {
         setStrategyName("DEALER STRATEGY");
     }
-    public int calculateWager(int tableMin) {
+    public int calculateWager(int tableMin, int tableMax) {
         return 0;
     }
 

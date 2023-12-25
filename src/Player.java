@@ -25,6 +25,12 @@ public class Player {
             case "CAESARS DEPOSIT BONUS STRATEGY":
                 strategy = new CaesarsDepositBonusStrategy();
                 break;
+            case "HI-LO STRATEGY":
+                strategy = new HiLoStrategy();
+                break;
+            case "MENTOR STRATEGY":
+                strategy = new MentorStrategy();
+                break;
         }
 
         hands.add(new Hand());
@@ -68,8 +74,8 @@ public class Player {
         totalWagers += insuranceWager;
     }
 
-    public void placeWager(int tableMin) {
-        wagers.add(strategy.calculateWager(tableMin));
+    public void placeWager(int tableMin, int tableMax) {
+        wagers.add(strategy.calculateWager(tableMin, tableMax));
         totalWagers += wagers.getFirst();
     }
 
@@ -84,6 +90,7 @@ public class Player {
         hands.add(new Hand());
         hands.getLast().addCard(hands.get(currentHand).getCards().pop());
         hands.get(currentHand).decreaseValue(hands.get(currentHand).getCards().getFirst());
+        strategy.addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
         hands.getLast().addCard(deck.dealCard());
         wagers.add(wagers.getFirst());
         totalWagers += wagers.getFirst();

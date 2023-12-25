@@ -1,14 +1,34 @@
 import java.util.Objects;
 
-public class BasicStrategy extends Strategy{
-    public BasicStrategy() {
+public class MentorStrategy extends Strategy{
+    public MentorStrategy() {
         setTakesInsurance(false);
-        setStrategyName("BASIC STRATEGY");
-        for (int i = 0; i < 10; i++) setCountValue(i, 0);
+        setStrategyName("MENTOR STRATEGY");
+        setCountValue(0, 1);
+        setCountValue(1, 2);
+        setCountValue(2, 2);
+        setCountValue(3, 2);
+        setCountValue(4, 2);
+        setCountValue(5, 1);
+        setCountValue(6, 0);
+        setCountValue(7, -1);
+        setCountValue(8, -2);
+        setCountValue(9, -1);
+    }
+
+    @Override
+    public void addCardToCount(int card, int remainingCards) {
+        setRunningCount(getRunningCount() + getCountValues()[card - 2]);
+        setTrueCount((int) (getRunningCount() / (remainingCards / 104.0)));
     }
 
     public int calculateWager(int tableMin, int tableMax) {
-        return tableMin;
+        int wager;
+
+        if (getTrueCount() >= 0) wager = tableMin * getTrueCount();
+        else wager = 0;
+
+        return wager;
     }
 
     public void playHand(Hand hand, Deck deck, Hand dealerHand, Player player, int currentHand, Rules rules) {

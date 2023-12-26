@@ -12,7 +12,7 @@ public class Main {
         int progressRounded;
         int tempInt;
 
-        Rules rules = new Rules(false, true, false, 1.5, 0.2, 1, 0, 5000, 10, 2); // Establish game rules.
+        Rules rules = new Rules(false, true, true, false, 1.5, 0.2, 1, 0, 5000, 10, 2); // Establish game rules.
 
         // PLAYER SETUP
         final Player player = new Player("HI-LO STRATEGY");

@@ -19,7 +19,11 @@ public class HiLoStrategy extends Strategy{
     public int calculateWager(int tableMin, int tableMax) {
         int wager;
 
-        if (getTrueCount() >= 0) wager = tableMin * getTrueCount();
+        if (getTrueCount() >= 0) {
+            wager = tableMin * getTrueCount();
+
+            if (wager > tableMax) wager = tableMax;
+        }
         else wager = 0;
 
         return wager;
@@ -242,7 +246,7 @@ public class HiLoStrategy extends Strategy{
                         player.splitHand(currentHand, deck);
                         player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                         hand.addCard(deck.dealCard());
-                        isRoundOver = true;
+                        if (hand.getCards().get(1) != 11 || (hand.getCards().get(1) == 11 && !rules.isRSA())) isRoundOver = true;
                     }
                 }
                 else if (hand.getSoftCards() > 0) {

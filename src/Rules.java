@@ -1,5 +1,6 @@
 public class Rules {
     private final boolean isDAS;
+    private final boolean isRSA;
     private final boolean isS17;
     private final boolean isSurrender;
     private final double blackjackPayout;
@@ -10,8 +11,9 @@ public class Rules {
     private final int tableMin;
     private final int totalDecks;
 
-    public Rules(boolean isDAS, boolean isS17, boolean isSurrender, double blackjackPayout, double penetration, int burnCards, int doubleLimit, int tableMax, int tableMin, int totalDecks) {
+    public Rules(boolean isDAS, boolean isRSA, boolean isS17, boolean isSurrender, double blackjackPayout, double penetration, int burnCards, int doubleLimit, int tableMax, int tableMin, int totalDecks) {
         this.isDAS = isDAS;
+        this.isRSA = isRSA;
         this.isS17 = isS17;
         this.isSurrender = isSurrender;
         this.blackjackPayout = blackjackPayout;
@@ -54,6 +56,8 @@ public class Rules {
     public boolean isDAS() {
         return isDAS;
     }
+
+    public boolean isRSA() { return isRSA; }
 
     public boolean isS17() {
         return isS17;

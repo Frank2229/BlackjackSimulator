@@ -32,6 +32,8 @@ public class MentorStrategy extends Strategy{
         else if (getTrueCount() >= 17) wager = tableMin * 50;
         else wager = tableMin;
 
+        if (wager > tableMax) wager = tableMax;
+
         return wager;
     }
 
@@ -252,7 +254,7 @@ public class MentorStrategy extends Strategy{
                         player.splitHand(currentHand, deck);
                         player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                         hand.addCard(deck.dealCard());
-                        isRoundOver = true;
+                        if (hand.getCards().get(1) != 11 || (hand.getCards().get(1) == 11 && !rules.isRSA())) isRoundOver = true;
                     }
                 }
                 else if (hand.getSoftCards() > 0) {

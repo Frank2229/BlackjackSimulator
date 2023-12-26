@@ -12,10 +12,10 @@ public class Main {
         int progressRounded;
         int tempInt;
 
-        Rules rules = new Rules(false, true, true, false, 1.5, 0.2, 1, 0, 5000, 10, 2); // Establish game rules.
+        Rules rules = new Rules(true, false, true, true, 1.5, 0.2, 1, 0, 4, 5000, 10, 8); // Establish game rules.
 
         // PLAYER SETUP
-        final Player player = new Player("HI-LO STRATEGY");
+        final Player player = new Player("MENTOR STRATEGY");
         final Player[] players = new Player[5];
         final Player dealer = new Player("DEALER STRATEGY");
 
@@ -104,24 +104,31 @@ public class Main {
                     // Add dealer's cards to player counts.
                     for (int i = 0; i < players.length; i++) if (players[i] != null) for (int j = 1; j < dealer.getHands().getFirst().getCards().size(); j++) players[i].getStrategy().addCardToCount(dealer.getHands().getFirst().getCards().get(j), deck.getShoe().size());
 
-                    //LinkedList<String> playerHandsStrings = new LinkedList<>();
-                    //StringBuilder tempString;
-                    //for (int i = 0; i < player.getHands().size(); i++) {
-                        //playerHandsStrings.add("Player Hand " + (i + 1) + ": ");
-                        //tempString = new StringBuilder();
-                        //for (int j = 0; j < player.getHands().get(i).getCards().size(); j++) tempString.append(Integer.toString(player.getHands().get(i).getCards().get(j))).append(" ");
-                        //playerHandsStrings.set(i, playerHandsStrings.get(i) + tempString);
-                    //}
-                    //for (int i = 0; i < playerHandsStrings.size(); i++) {
-                        //System.out.println(playerHandsStrings.get(i));
-                        //System.out.println(player.getHands().get(i).getValue());
-                    //}
-                    //String dealerHandString = "Dealer Hand: ";
-                    //tempString = new StringBuilder();
-                    //for (int i = 0; i < dealer.getHands().getFirst().getCards().size(); i++) tempString.append(Integer.toString(dealer.getHands().getFirst().getCards().get(i))).append(" ");
-                    //dealerHandString += tempString;
-                    //System.out.println(dealerHandString);
-                    //System.out.println(dealer.getHands().getFirst().getValue());
+                    /*
+                    if (player.getHands().size() > 2 && player.getHands().getFirst().getCards().getFirst() == 11) {
+                        LinkedList<String> playerHandsStrings = new LinkedList<>();
+                        StringBuilder tempString;
+                        for (int i = 0; i < player.getHands().size(); i++) {
+                            playerHandsStrings.add("Player Hand " + (i + 1) + ": ");
+                            tempString = new StringBuilder();
+                            for (int j = 0; j < player.getHands().get(i).getCards().size(); j++)
+                                tempString.append(Integer.toString(player.getHands().get(i).getCards().get(j))).append(" ");
+                            playerHandsStrings.set(i, playerHandsStrings.get(i) + tempString);
+                        }
+                        for (int i = 0; i < playerHandsStrings.size(); i++) {
+                            System.out.println(playerHandsStrings.get(i));
+                            System.out.println(player.getHands().get(i).getValue());
+                        }
+                        String dealerHandString = "Dealer Hand: ";
+                        tempString = new StringBuilder();
+                        for (int i = 0; i < dealer.getHands().getFirst().getCards().size(); i++)
+                            tempString.append(Integer.toString(dealer.getHands().getFirst().getCards().get(i))).append(" ");
+                        dealerHandString += tempString;
+                        System.out.println(dealerHandString);
+                        System.out.println(dealer.getHands().getFirst().getValue());
+                        for (int i = 0; i < player.getWagers().size(); i++) System.out.println(player.getWagers().get(i));
+                    }
+                     */
 
                     // All hands are compared to the dealer's.
                     // If a player's hand is greater than the dealer's without going over 21, he/she wins.
@@ -174,7 +181,7 @@ public class Main {
 
     public static void playHand(Player player, Deck deck, Player dealer, int currentHand, Rules rules) {
         int tempInt = currentHand;
-        player.getStrategy().playHand(player.getHands().getFirst(), deck, dealer.getHands().getFirst(), player, tempInt, rules);
+        player.getStrategy().playHand(player.getHands().get(tempInt), deck, dealer.getHands().getFirst(), player, tempInt, rules);
         tempInt++;
         if (tempInt < player.getHands().size())playHand(player, deck, dealer, tempInt, rules);
     }

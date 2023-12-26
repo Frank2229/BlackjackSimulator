@@ -38,4 +38,8 @@ public class Hand {
     public int getValue() {
         return value;
     }
+
+    public void increaseValue() {
+        value += 10;
+    }
 }

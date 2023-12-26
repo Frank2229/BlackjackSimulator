@@ -32,9 +32,13 @@ public class HiLoStrategy extends Strategy{
     public void playHand(Hand hand, Deck deck, Hand dealerHand, Player player, int currentHand, Rules rules) {
         boolean isRoundOver = false;
 
+        if (player.getHands().size() > 1 && hand.getCards().size() == 2 && hand.getCards().getFirst() == 11) {
+            if (hand.getCards().get(1) != 11 || (hand.getCards().get(1) == 11 && !rules.isRSA())) isRoundOver = true;
+        }
+
         while (!isRoundOver) {
             if (hand.getCards().size() == 2) {
-                if (Objects.equals(hand.getCards().getFirst(), hand.getCards().get(1))) {
+                if (Objects.equals(hand.getCards().getFirst(), hand.getCards().get(1)) && player.getHands().size() < rules.getMaxSplitHands()) {
                     if (hand.getCards().getFirst() == 2) {
                         if (dealerHand.getCards().getFirst() >= 4 && dealerHand.getCards().getFirst() <= 7) {
                             player.splitHand(currentHand, deck);
@@ -42,26 +46,14 @@ public class HiLoStrategy extends Strategy{
                             hand.addCard(deck.dealCard());
                         }
                         else if (dealerHand.getCards().getFirst() == 2) {
-                            if (rules.getTotalDecks() == 1 || rules.isDAS()) {
-                                player.splitHand(currentHand, deck);
-                                player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
-                                hand.addCard(deck.dealCard());
-                            }
-                            else {
-                                player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
-                                hand.addCard(deck.dealCard());
-                            }
+                            if (rules.isDAS()) player.splitHand(currentHand, deck);
+                            player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
+                            hand.addCard(deck.dealCard());
                         }
                         else if (dealerHand.getCards().getFirst() == 3) {
-                            if (rules.isDAS()) {
-                                player.splitHand(currentHand, deck);
-                                player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
-                                hand.addCard(deck.dealCard());
-                            }
-                            else {
-                                player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
-                                hand.addCard(deck.dealCard());
-                            }
+                            if (rules.isDAS() || rules.getTotalDecks() == 1) player.splitHand(currentHand, deck);
+                            player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
+                            hand.addCard(deck.dealCard());
                         }
                         else {
                             player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
@@ -146,26 +138,14 @@ public class HiLoStrategy extends Strategy{
                             hand.addCard(deck.dealCard());
                         }
                         else if (dealerHand.getCards().getFirst() == 2) {
-                            if (rules.getTotalDecks() <= 2 || rules.isDAS()) {
-                                player.splitHand(currentHand, deck);
-                                player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
-                                hand.addCard(deck.dealCard());
-                            }
-                            else {
-                                player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
-                                hand.addCard(deck.dealCard());
-                            }
+                            if (rules.getTotalDecks() <= 2 || rules.isDAS()) player.splitHand(currentHand, deck);
+                            player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
+                            hand.addCard(deck.dealCard());
                         }
                         else if (dealerHand.getCards().getFirst() == 7) {
-                            if (rules.getTotalDecks() <= 2 && rules.isDAS()) {
-                                player.splitHand(currentHand, deck);
-                                player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
-                                hand.addCard(deck.dealCard());
-                            }
-                            else {
-                                player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
-                                hand.addCard(deck.dealCard());
-                            }
+                            if (rules.getTotalDecks() <= 2 && rules.isDAS()) player.splitHand(currentHand, deck);
+                            player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
+                            hand.addCard(deck.dealCard());
                         }
                         else {
                             player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
@@ -179,15 +159,9 @@ public class HiLoStrategy extends Strategy{
                             hand.addCard(deck.dealCard());
                         }
                         else if (dealerHand.getCards().getFirst() == 8) {
-                            if (rules.getTotalDecks() <= 2 && rules.isDAS()) {
-                                player.splitHand(currentHand, deck);
-                                player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
-                                hand.addCard(deck.dealCard());
-                            }
-                            else {
-                                player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
-                                hand.addCard(deck.dealCard());
-                            }
+                            if (rules.getTotalDecks() <= 2 && rules.isDAS()) player.splitHand(currentHand, deck);
+                            player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
+                            hand.addCard(deck.dealCard());
                         }
                         else if (dealerHand.getCards().getFirst() == 10) {
                             if (rules.getTotalDecks() == 1) {
@@ -200,8 +174,8 @@ public class HiLoStrategy extends Strategy{
                             }
                         }
                         else if (dealerHand.getCards().getFirst() == 11) {
-                            if (rules.getTotalDecks() == 1) {
-                                if (rules.isSurrender() && player.getHands().size() == 1) player.surrender(currentHand, deck);
+                            if (rules.getTotalDecks() == 1 && !rules.isS17() && player.getHands().size() == 1 && rules.isSurrender()) {
+                                player.surrender(currentHand, deck);
                                 isRoundOver = true;
                             }
                             else {
@@ -215,7 +189,7 @@ public class HiLoStrategy extends Strategy{
                         }
                     }
                     else if (hand.getCards().getFirst() == 8) {
-                        if (rules.getTotalDecks() > 1 && rules.isSurrender() && player.getHands().size() == 1 && dealerHand.getCards().getFirst() == 11) {
+                        if (rules.getTotalDecks() > 1 && rules.isSurrender() && player.getHands().size() == 1 && dealerHand.getCards().getFirst() == 11 && !rules.isS17()) {
                             player.surrender(currentHand, deck);
                             isRoundOver = true;
                         }
@@ -252,13 +226,13 @@ public class HiLoStrategy extends Strategy{
                 else if (hand.getSoftCards() > 0) {
                     if (hand.getValue() <= 12) hand.addCard(deck.dealCard());
                     else if (hand.getValue() == 13) {
-                        if ((dealerHand.getCards().getFirst() == 5 || dealerHand.getCards().getFirst() == 6) && rules.getDoubleLimit() == 0 && (rules.isDAS() || player.getHands().size() == 1)) {
+                        if ((dealerHand.getCards().getFirst() == 5 || dealerHand.getCards().getFirst() == 6) && rules.getDoubleLimit() == 0 && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
                             player.doubleDown(currentHand);
                             player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
                         }
-                        else if (dealerHand.getCards().getFirst() == 4 && rules.getTotalDecks() == 1 && rules.getDoubleLimit() == 0 && (rules.isDAS() || player.getHands().size() == 1)) {
+                        else if (dealerHand.getCards().getFirst() == 4 && rules.getTotalDecks() == 1 && rules.getDoubleLimit() == 0 && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
                             player.doubleDown(currentHand);
                             player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                             hand.addCard(deck.dealCard());
@@ -270,13 +244,13 @@ public class HiLoStrategy extends Strategy{
                         }
                     }
                     else if (hand.getValue() == 14) {
-                        if ((dealerHand.getCards().getFirst() == 5 || dealerHand.getCards().getFirst() == 6) && rules.getDoubleLimit() == 0 && (rules.isDAS() || player.getHands().size() == 1)) {
+                        if ((dealerHand.getCards().getFirst() == 5 || dealerHand.getCards().getFirst() == 6) && rules.getDoubleLimit() == 0 && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
                             player.doubleDown(currentHand);
                             player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
                         }
-                        else if (dealerHand.getCards().getFirst() == 4 && rules.getDoubleLimit() == 0 && (rules.isDAS() || player.getHands().size() == 1)) {
+                        else if (dealerHand.getCards().getFirst() == 4 && rules.getDoubleLimit() == 0 && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
                             if (rules.getTotalDecks() == 1 || (rules.getTotalDecks() == 2 && !rules.isS17())) {
                                 player.doubleDown(currentHand);
                                 player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
@@ -294,7 +268,7 @@ public class HiLoStrategy extends Strategy{
                         }
                     }
                     else if (hand.getValue() == 15 || hand.getValue() == 16) {
-                        if ((dealerHand.getCards().getFirst() >= 4 && dealerHand.getCards().getFirst() <= 6) && rules.getDoubleLimit() == 0 && (rules.isDAS() || player.getHands().size() == 1)) {
+                        if ((dealerHand.getCards().getFirst() >= 4 && dealerHand.getCards().getFirst() <= 6) && rules.getDoubleLimit() == 0 && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
                             player.doubleDown(currentHand);
                             player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                             hand.addCard(deck.dealCard());
@@ -306,13 +280,13 @@ public class HiLoStrategy extends Strategy{
                         }
                     }
                     else if (hand.getValue() == 17) {
-                        if ((dealerHand.getCards().getFirst() >= 3 && dealerHand.getCards().getFirst() <= 6) && rules.getDoubleLimit() == 0 && (rules.isDAS() || player.getHands().size() == 1)) {
+                        if ((dealerHand.getCards().getFirst() >= 3 && dealerHand.getCards().getFirst() <= 6) && rules.getDoubleLimit() == 0 && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
                             player.doubleDown(currentHand);
                             player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
                         }
-                        else if (dealerHand.getCards().getFirst() == 2 && rules.getTotalDecks() == 1 && rules.getDoubleLimit() == 0 && (rules.isDAS() || player.getHands().size() == 1)) {
+                        else if (dealerHand.getCards().getFirst() == 2 && rules.getTotalDecks() == 1 && rules.getDoubleLimit() == 0 && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
                             player.doubleDown(currentHand);
                             player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                             hand.addCard(deck.dealCard());
@@ -335,14 +309,14 @@ public class HiLoStrategy extends Strategy{
                                 hand.addCard(deck.dealCard());
                             }
                         }
-                        else if (dealerHand.getCards().getFirst() >= 3 && dealerHand.getCards().getFirst() <= 6 && rules.getDoubleLimit() == 0 && (rules.isDAS() || player.getHands().size() == 1)) {
+                        else if (dealerHand.getCards().getFirst() >= 3 && dealerHand.getCards().getFirst() <= 6 && rules.getDoubleLimit() == 0 && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
                             player.doubleDown(currentHand);
                             player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
                         }
-                        else if (dealerHand.getCards().getFirst() == 2 && rules.getDoubleLimit() == 0 && (rules.isDAS() || player.getHands().size() == 1)) {
-                            if (rules.getTotalDecks() >= 2 && !rules.isS17() && (rules.isDAS() || player.getHands().size() == 1)) {
+                        else if (dealerHand.getCards().getFirst() == 2 && rules.getDoubleLimit() == 0 && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
+                            if (rules.getTotalDecks() >= 2 && !rules.isS17()) {
                                 player.doubleDown(currentHand);
                                 player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                                 hand.addCard(deck.dealCard());
@@ -351,7 +325,7 @@ public class HiLoStrategy extends Strategy{
                         }
                         else isRoundOver = true;
                     }
-                    else if (hand.getValue() == 19 && (rules.getTotalDecks() == 1 || !rules.isS17()) && rules.getDoubleLimit() == 0 && (rules.isDAS() || player.getHands().size() == 1)) {
+                    else if (hand.getValue() == 19 && (rules.getTotalDecks() == 1 || !rules.isS17()) && rules.getDoubleLimit() == 0 && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
                         player.doubleDown(currentHand);
                         player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                         hand.addCard(deck.dealCard());
@@ -362,7 +336,7 @@ public class HiLoStrategy extends Strategy{
                 else {
                     if (hand.getValue() <= 7) hand.addCard(deck.dealCard());
                     else if (hand.getValue() == 8) {
-                        if (rules.getTotalDecks() == 1 && rules.getDoubleLimit() <= 8 && (dealerHand.getCards().getFirst() == 5 || dealerHand.getCards().getFirst() == 6) && (rules.isDAS() || player.getHands().size() == 1)) {
+                        if (rules.getTotalDecks() == 1 && rules.getDoubleLimit() <= 8 && (dealerHand.getCards().getFirst() == 5 || dealerHand.getCards().getFirst() == 6) && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
                             player.doubleDown(currentHand);
                             player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                             hand.addCard(deck.dealCard());
@@ -374,13 +348,13 @@ public class HiLoStrategy extends Strategy{
                         }
                     }
                     else if (hand.getValue() == 9) {
-                        if (rules.getDoubleLimit() <= 9 && (dealerHand.getCards().getFirst() >= 3 && dealerHand.getCards().getFirst() <= 6) && (rules.isDAS() || player.getHands().size() == 1)) {
+                        if (rules.getDoubleLimit() <= 9 && (dealerHand.getCards().getFirst() >= 3 && dealerHand.getCards().getFirst() <= 6) && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
                             player.doubleDown(currentHand);
                             player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
                         }
-                        else if (rules.getTotalDecks() <= 2 && dealerHand.getCards().getFirst() == 2 && rules.getDoubleLimit() <= 9 && (rules.isDAS() || player.getHands().size() == 1)) {
+                        else if (rules.getTotalDecks() <= 2 && dealerHand.getCards().getFirst() == 2 && rules.getDoubleLimit() <= 9 && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
                             player.doubleDown(currentHand);
                             player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                             hand.addCard(deck.dealCard());
@@ -392,7 +366,7 @@ public class HiLoStrategy extends Strategy{
                         }
                     }
                     else if (hand.getValue() == 10) {
-                        if (dealerHand.getCards().getFirst() <= 9 && (rules.isDAS() || player.getHands().size() == 1)) {
+                        if (dealerHand.getCards().getFirst() <= 9 && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
                             player.doubleDown(currentHand);
                             player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                             hand.addCard(deck.dealCard());
@@ -404,13 +378,13 @@ public class HiLoStrategy extends Strategy{
                         }
                     }
                     else if (hand.getValue() == 11) {
-                        if (dealerHand.getCards().getFirst() <= 10 && (rules.isDAS() || player.getHands().size() == 1)) {
+                        if (dealerHand.getCards().getFirst() <= 10 && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
                             player.doubleDown(currentHand);
                             player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                             hand.addCard(deck.dealCard());
                             isRoundOver = true;
                         }
-                        else if (dealerHand.getCards().getFirst() == 11 && (rules.getTotalDecks() <= 2 || !rules.isS17()) && (rules.isDAS() || player.getHands().size() == 1)) {
+                        else if (dealerHand.getCards().getFirst() == 11 && (rules.getTotalDecks() <= 2 || !rules.isS17()) && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
                             player.doubleDown(currentHand);
                             player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                             hand.addCard(deck.dealCard());

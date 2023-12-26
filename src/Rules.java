@@ -7,11 +7,12 @@ public class Rules {
     private final double penetration;
     private final int burnCards;
     private final int doubleLimit;
+    private final int maxSplitHands;
     private final int tableMax;
     private final int tableMin;
     private final int totalDecks;
 
-    public Rules(boolean isDAS, boolean isRSA, boolean isS17, boolean isSurrender, double blackjackPayout, double penetration, int burnCards, int doubleLimit, int tableMax, int tableMin, int totalDecks) {
+    public Rules(boolean isDAS, boolean isRSA, boolean isS17, boolean isSurrender, double blackjackPayout, double penetration, int burnCards, int doubleLimit,int maxSplitHands, int tableMax, int tableMin, int totalDecks) {
         this.isDAS = isDAS;
         this.isRSA = isRSA;
         this.isS17 = isS17;
@@ -20,6 +21,7 @@ public class Rules {
         this.penetration = penetration;
         this.burnCards = burnCards;
         this.doubleLimit = doubleLimit;
+        this.maxSplitHands = maxSplitHands;
         this.tableMax = tableMax;
         this.tableMin = tableMin;
         this.totalDecks = totalDecks;
@@ -35,6 +37,10 @@ public class Rules {
 
     public int getDoubleLimit() {
         return doubleLimit;
+    }
+
+    public int getMaxSplitHands() {
+        return maxSplitHands;
     }
 
     public double getPenetration() {

@@ -6,6 +6,7 @@ public class Player {
     private double totalWagers = 0;
     private double insuranceWager;
     private double winsLosses = 0;
+    private int initialWager;
     private Strategy strategy;
 
     public Player(String strategyString) {
@@ -76,6 +77,7 @@ public class Player {
 
     public void placeWager(int tableMin, int tableMax) {
         wagers.add(strategy.calculateWager(tableMin, tableMax));
+        initialWager = wagers.getFirst();
         totalWagers += wagers.getFirst();
     }
 
@@ -84,6 +86,7 @@ public class Player {
         hands.clear();
         hands.add(new Hand());
         insuranceWager = 0;
+        initialWager = 0;
     }
 
     public void splitHand(int currentHand, Deck deck) {
@@ -92,8 +95,9 @@ public class Player {
         hands.get(currentHand).decreaseValue(hands.get(currentHand).getCards().getFirst());
         strategy.addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
         hands.getLast().addCard(deck.dealCard());
-        wagers.add(wagers.getFirst());
-        totalWagers += wagers.getFirst();
+        wagers.add(initialWager);
+        totalWagers += initialWager;
+        if (hands.get(currentHand).getCards().getFirst() == 11) hands.get(currentHand).increaseValue();
     }
 
     public void surrender(int currentHand, Deck deck) {

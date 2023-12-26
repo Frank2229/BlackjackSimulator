@@ -4,7 +4,7 @@ public class Main {
     public static void main(String[] args) {
         // SIMULATION PARAMETERS
         final int playerSeat = 2;
-        final int totalOtherPlayers = 0;
+        final int totalOtherPlayers = 3;
         final int totalRounds = 1000000;
         final LinkedList<Integer> initialCards = new LinkedList<>();
         double progress;
@@ -12,10 +12,10 @@ public class Main {
         int progressRounded;
         int tempInt;
 
-        Rules rules = new Rules(true, false, true, true, 1.5, 0.2, 1, 0, 4, 5000, 10, 8); // Establish game rules.
+        Rules rules = new Rules(true, false, true, true, 1.5, 0.2, 1, 0, 3, 5000, 10, 8); // Establish game rules.
 
         // PLAYER SETUP
-        final Player player = new Player("MENTOR STRATEGY");
+        final Player player = new Player("BASIC STRATEGY");
         final Player[] players = new Player[5];
         final Player dealer = new Player("DEALER STRATEGY");
 
@@ -34,7 +34,7 @@ public class Main {
         // Start simulation.
         // If the ratio of cards remaining by total cards is greater than penetration, play round. Otherwise, shuffle.
         while (currentRound < totalRounds) {
-            if (deck.getShoe().size() / (double)(deck.getShoe().size() + deck.getDiscardTray().size()) > rules.getPenetration() && player.getStrategy().getTrueCount() >= -4) {
+            if (deck.getShoe().size() / (rules.getTotalDecks() * 52.0) > rules.getPenetration() && player.getStrategy().getTrueCount() >= -4) {
                 for (Player value : players) if (value != null) value.placeWager(rules.getTableMin(), rules.getTableMax()); // Place wagers.
                 //System.out.println("Wager: " + player.getWagers().getFirst());
 
@@ -85,7 +85,7 @@ public class Main {
                             for (int i = 0; i < players.length; i++) {
                                 if (players[i] != null && players[i] != value) {
                                     for (int j = 0; j < value.getHands().size(); j++) {
-                                        for (int k = 0; k < value.getHands().get(i).getCards().size(); k++) {
+                                        for (int k = 0; k < value.getHands().get(j).getCards().size(); k++) {
                                             if (value.getHands().size() > 1) {
                                                 if ((j == 0 || j == 1) && k >= 1) players[i].getStrategy().addCardToCount(value.getHands().get(j).getCards().get(k), deck.getShoe().size());
                                             }

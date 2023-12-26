@@ -38,10 +38,8 @@ public class Deck {
     // All cards from discard tray are moved back to the shoe and shuffled.
     // After the shuffle, a specific number of cards are removed from play (burned).
     public void shuffle(int burnCards) {
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < discardTray.size(); j++) shoe.add(discardTray.pop());
-            Collections.shuffle(shoe);
-            for (int j = 0; j < burnCards; j++) discardTray.add(shoe.pop());
-        }
+        while (!discardTray.isEmpty()) shoe.add(discardTray.pop());
+        Collections.shuffle(shoe);
+        for (int j = 0; j < burnCards; j++) discardTray.add(shoe.pop());
     }
 }

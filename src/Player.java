@@ -42,7 +42,7 @@ public class Player {
     }
 
     public void doubleDown(int currentHand) {
-        totalWagers += wagers.get(currentHand);
+        totalWagers += initialWager;
         wagers.set(currentHand, wagers.get(currentHand) * 2);
     }
 
@@ -78,7 +78,7 @@ public class Player {
     public void placeWager(int tableMin, int tableMax) {
         wagers.add(strategy.calculateWager(tableMin, tableMax));
         initialWager = wagers.getFirst();
-        totalWagers += wagers.getFirst();
+        totalWagers += initialWager;
     }
 
     public void resetRound(Deck deck) {

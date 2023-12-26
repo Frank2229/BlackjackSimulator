@@ -5,14 +5,14 @@ public class Main {
         // SIMULATION PARAMETERS
         final int playerSeat = 2;
         final int totalOtherPlayers = 0;
-        final int totalRounds = 292000;
+        final int totalRounds = 1000000;
         final LinkedList<Integer> initialCards = new LinkedList<>();
         double progress;
         int currentRound = 0;
         int progressRounded;
         int tempInt;
 
-        Rules rules = new Rules(true, true, false, 1.5, 0.3, 1, 0, 5000, 25, 2); // Establish game rules.
+        Rules rules = new Rules(false, true, false, 1.5, 0.2, 1, 0, 5000, 10, 2); // Establish game rules.
 
         // PLAYER SETUP
         final Player player = new Player("HI-LO STRATEGY");
@@ -34,7 +34,7 @@ public class Main {
         // Start simulation.
         // If the ratio of cards remaining by total cards is greater than penetration, play round. Otherwise, shuffle.
         while (currentRound < totalRounds) {
-            if (deck.getShoe().size() / (double)(deck.getShoe().size() + deck.getDiscardTray().size()) > rules.getPenetration()) {
+            if (deck.getShoe().size() / (double)(deck.getShoe().size() + deck.getDiscardTray().size()) > rules.getPenetration() && player.getStrategy().getTrueCount() >= -4) {
                 for (Player value : players) if (value != null) value.placeWager(rules.getTableMin(), rules.getTableMax()); // Place wagers.
                 //System.out.println("Wager: " + player.getWagers().getFirst());
 

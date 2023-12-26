@@ -242,6 +242,7 @@ public class HiLoStrategy extends Strategy{
                         player.splitHand(currentHand, deck);
                         player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                         hand.addCard(deck.dealCard());
+                        isRoundOver = true;
                     }
                 }
                 else if (hand.getSoftCards() > 0) {

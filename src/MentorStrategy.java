@@ -25,8 +25,12 @@ public class MentorStrategy extends Strategy{
     public int calculateWager(int tableMin, int tableMax) {
         int wager;
 
-        if (getTrueCount() >= 0) wager = tableMin * getTrueCount();
-        else wager = 0;
+        if (getTrueCount() >= 5 && getTrueCount() <= 7) wager = tableMin * 10;
+        else if (getTrueCount() >= 8 && getTrueCount() <= 10) wager = tableMin * 20;
+        else if (getTrueCount() >= 11 && getTrueCount() <= 13) wager = tableMin * 30;
+        else if (getTrueCount() >= 14 && getTrueCount() <= 16) wager = tableMin * 40;
+        else if (getTrueCount() >= 17) wager = tableMin * 50;
+        else wager = tableMin;
 
         return wager;
     }
@@ -248,6 +252,7 @@ public class MentorStrategy extends Strategy{
                         player.splitHand(currentHand, deck);
                         player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
                         hand.addCard(deck.dealCard());
+                        isRoundOver = true;
                     }
                 }
                 else if (hand.getSoftCards() > 0) {

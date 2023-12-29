@@ -10,10 +10,10 @@ public class Main {
         int currentRound = 0;
         int tempInt;
 
-        Rules rules = new Rules(true, true, false, false, true, 1.5, 0.2, 1, 0, 3, 4, 5000, 10, 6); // Establish game rules.
+        Rules rules = new Rules(true, true, true, false, true, 1.5, 0.10, 1, 0, 3, 1, 5000, 10, 6); // Establish game rules.
 
         // PLAYER SETUP
-        final Player player = new Player("MENTOR STRATEGY");
+        final Player player = new Player("HI-LO STRATEGY");
         final Player[] players = new Player[5];
         final Player dealer = new Player("DEALER STRATEGY");
 

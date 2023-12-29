@@ -1,19 +1,23 @@
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.LinkedList;
 
 public class Main {
     public static void main(String[] args) {
         // SIMULATION PARAMETERS
-        final int playerSeat = 2;
+        final DecimalFormat edgeFormat = new DecimalFormat("0.000");
+        final int playerSeat = 0;
         final int totalOtherPlayers = 0;
         final int totalRounds = 10000000;
         final LinkedList<Integer> initialCards = new LinkedList<>();
+        final NumberFormat winLossFormat = NumberFormat.getCurrencyInstance();
         int currentRound = 0;
         int tempInt;
 
-        Rules rules = new Rules(true, true, true, false, true, 1.5, 0.10, 1, 0, 3, 1, 5000, 10, 6); // Establish game rules.
+        Rules rules = new Rules(true, true, false, false, false, 1.5, 0.17, 1, 0, 3, 1, 5000, 25, 3); // Establish game rules.
 
         // PLAYER SETUP
-        final Player player = new Player("HI-LO STRATEGY");
+        final Player player = new Player("MENTOR STRATEGY");
         final Player[] players = new Player[5];
         final Player dealer = new Player("DEALER STRATEGY");
 
@@ -145,10 +149,10 @@ public class Main {
         // Calculate the average win/loss per wager, or 'edge'.
         // If positive, there is a player edge. If negative, there is a house edge.
         double edge = (player.getWinsLosses() / player.getTotalWagers()) * 100;
-        if (edge >= 0) System.out.println("\nPlayer Edge: " + edge);
-        else System.out.println("\nHouse Edge: " + edge * -1);
-        if (player.getWinsLosses() < 0) System.out.println("Net loss: (" + player.getWinsLosses() + ")");
-        else System.out.println("Net win: " + player.getWinsLosses());
+        if (edge >= 0) System.out.println("\nPlayer Edge: " + edgeFormat.format(edge) + "%");
+        else System.out.println("\nHouse Edge: " + edgeFormat.format(edge * -1) + "%");
+        if (player.getWinsLosses() < 0) System.out.println("Net loss: (" + winLossFormat.format(player.getWinsLosses() * -1) + ")");
+        else System.out.println("Net win: " + winLossFormat.format(player.getWinsLosses()));
     }
 
     // Recursive loop that terminates when the player plays all of his/her hands.

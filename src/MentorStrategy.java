@@ -25,11 +25,11 @@ public class MentorStrategy extends BasicStrategy {
     public int calculateWager(int tableMin, int tableMax) {
         int wager;
 
-        if (getTrueCount() >= 5 && getTrueCount() <= 10) wager = tableMin * 5;
-        else if (getTrueCount() >= 11 && getTrueCount() <= 15) wager = tableMin * 10;
-        else if (getTrueCount() >= 11 && getTrueCount() <= 13) wager = tableMin * 15;
-        else if (getTrueCount() >= 14 && getTrueCount() <= 16) wager = tableMin * 20;
-        else if (getTrueCount() >= 17) wager = tableMin * 25;
+        if (getTrueCount() >= 4 && getTrueCount() <= 6) wager = tableMin * 2;
+        else if (getTrueCount() >= 7 && getTrueCount() <= 9) wager = tableMin * 4;
+        else if (getTrueCount() >= 10 && getTrueCount() <= 12) wager = tableMin * 6;
+        else if (getTrueCount() >= 13 && getTrueCount() <= 15) wager = tableMin * 8;
+        else if (getTrueCount() >= 16) wager = tableMin * 10;
         else wager = tableMin;
 
         if (wager > tableMax) wager = tableMax;

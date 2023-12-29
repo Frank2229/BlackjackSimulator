@@ -2,26 +2,30 @@ public class Rules {
     private final boolean isDAS;
     private final boolean isRSA;
     private final boolean isS17;
+    private final boolean isShuffleByRounds;
     private final boolean isSurrender;
     private final double blackjackPayout;
     private final double penetration;
     private final int burnCards;
     private final int doubleLimit;
     private final int maxSplitHands;
+    private final int roundsPerShuffle;
     private final int tableMax;
     private final int tableMin;
     private final int totalDecks;
 
-    public Rules(boolean isDAS, boolean isRSA, boolean isS17, boolean isSurrender, double blackjackPayout, double penetration, int burnCards, int doubleLimit,int maxSplitHands, int tableMax, int tableMin, int totalDecks) {
+    public Rules(boolean isDAS, boolean isRSA, boolean isS17, boolean isShuffleByRounds, boolean isSurrender, double blackjackPayout, double penetration, int burnCards, int doubleLimit,int maxSplitHands, int roundsPerShuffle, int tableMax, int tableMin, int totalDecks) {
         this.isDAS = isDAS;
         this.isRSA = isRSA;
         this.isS17 = isS17;
+        this.isShuffleByRounds = isShuffleByRounds;
         this.isSurrender = isSurrender;
         this.blackjackPayout = blackjackPayout;
         this.penetration = penetration;
         this.burnCards = burnCards;
         this.doubleLimit = doubleLimit;
         this.maxSplitHands = maxSplitHands;
+        this.roundsPerShuffle = roundsPerShuffle;
         this.tableMax = tableMax;
         this.tableMin = tableMin;
         this.totalDecks = totalDecks;
@@ -47,6 +51,8 @@ public class Rules {
         return penetration;
     }
 
+    public int getRoundsPerShuffle() { return roundsPerShuffle; }
+
     public int getTableMax() {
         return tableMax;
     }
@@ -68,6 +74,8 @@ public class Rules {
     public boolean isS17() {
         return isS17;
     }
+
+    public boolean isShuffleByRounds() { return isShuffleByRounds; }
 
     public boolean isSurrender() {
         return isSurrender;

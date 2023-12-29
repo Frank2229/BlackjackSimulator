@@ -12,10 +12,10 @@ public class Main {
         int progressRounded;
         int tempInt;
 
-        Rules rules = new Rules(true, false, true, false, 1.5, 0.25, 1, 0, 3, 5000, 10, 8); // Establish game rules.
+        Rules rules = new Rules(true, true, false, false, true, 1.5, 0.2, 1, 0, 3, 4, 5000, 10, 6); // Establish game rules.
 
         // PLAYER SETUP
-        final Player player = new Player("BASIC STRATEGY");
+        final Player player = new Player("MENTOR STRATEGY");
         final Player[] players = new Player[5];
         final Player dealer = new Player("DEALER STRATEGY");
 
@@ -32,9 +32,9 @@ public class Main {
         Deck deck = new Deck(rules); // The deck is created, shuffled, and burn card taken.
 
         // Start simulation.
-        // If the ratio of cards remaining by total cards is greater than penetration, play round. Otherwise, shuffle.
+        // If the ratio of cards remaining by total cards is greater than penetration or the current round is less than the total rounds allowed before the dealer shuffles, play round. Otherwise, shuffle.
         while (currentRound < totalRounds) {
-            if (deck.getShoe().size() / (rules.getTotalDecks() * 52.0) > rules.getPenetration() && player.getStrategy().getTrueCount() >= -4) {
+            if ((rules.isShuffleByRounds() && tempInt < rules.getRoundsPerShuffle()) || (!rules.isShuffleByRounds() && deck.getShoe().size() / (rules.getTotalDecks() * 52.0) > rules.getPenetration() && player.getStrategy().getTrueCount() >= -4)) {
                 for (Player value : players) if (value != null) value.placeWager(rules.getTableMin(), rules.getTableMax()); // Place wagers.
 
                 // Deal initial two cards.
@@ -103,34 +103,6 @@ public class Main {
                     // Add dealer's cards to player counts.
                     for (int i = 0; i < players.length; i++) if (players[i] != null) for (int j = 1; j < dealer.getHands().getFirst().getCards().size(); j++) players[i].getStrategy().addCardToCount(dealer.getHands().getFirst().getCards().get(j), deck.getShoe().size());
 
-                    /*
-                    if (player.getHands().size() > 1) {
-                        LinkedList<String> playerHandsStrings = new LinkedList<>();
-                        StringBuilder tempString;
-                        for (int i = 0; i < player.getHands().size(); i++) {
-                            playerHandsStrings.add("Player Hand " + (i + 1) + ": ");
-                            tempString = new StringBuilder();
-                            for (int j = 0; j < player.getHands().get(i).getCards().size(); j++)
-                                tempString.append(Integer.toString(player.getHands().get(i).getCards().get(j))).append(" ");
-                            playerHandsStrings.set(i, playerHandsStrings.get(i) + tempString);
-                        }
-                        for (int i = 0; i < playerHandsStrings.size(); i++) {
-                            System.out.println(playerHandsStrings.get(i));
-                            System.out.println(player.getHands().get(i).getValue());
-                        }
-                        String dealerHandString = "Dealer Hand: ";
-                        tempString = new StringBuilder();
-                        for (int i = 0; i < dealer.getHands().getFirst().getCards().size(); i++)
-                            tempString.append(Integer.toString(dealer.getHands().getFirst().getCards().get(i))).append(" ");
-                        dealerHandString += tempString;
-                        System.out.println(dealerHandString);
-                        System.out.println(dealer.getHands().getFirst().getValue());
-                        for (int i = 0; i < player.getWagers().size(); i++) System.out.println("Wager " + (i + 1) + ": " + player.getWagers().get(i));
-                        System.out.println("Total Wagers: " + player.getTotalWagers());
-                    }
-
-                     */
-
                     // All hands are compared to the dealer's.
                     // If a player's hand is greater than the dealer's without going over 21, he/she wins.
                     for (Player value : players) {
@@ -154,6 +126,7 @@ public class Main {
                 //System.out.println("Running count: " + player.getStrategy().getRunningCount());
                 //System.out.println("True count: " + player.getStrategy().getTrueCount() + "\n");
                 currentRound++;
+                tempInt++;
                 //progress = (currentRound / (double) totalRounds) * 100;
                 //progressRounded = (int) Math.round(progress);
                 //System.out.println(progressRounded + "% complete");
@@ -161,6 +134,7 @@ public class Main {
             else {
                 deck.shuffle(rules.getBurnCards());
                 for (int i = 0; i < players.length; i++) if (players[i] != null) players[i].getStrategy().resetCount(); // Revert all player counts to 0.
+                tempInt = 0;
             }
         }
 
@@ -180,6 +154,8 @@ public class Main {
         else System.out.println("Net win: " + player.getWinsLosses());
     }
 
+    // Recursive loop that terminates when the player plays all of his/her hands.
+    // Total loops increases everytime the player splits hand.
     public static void playHand(Player player, Deck deck, Player dealer, int currentHand, Rules rules) {
         int tempInt = currentHand;
         player.getStrategy().playHand(player.getHands().get(tempInt), deck, dealer.getHands().getFirst(), player, tempInt, rules);

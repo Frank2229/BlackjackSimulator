@@ -13,7 +13,7 @@ public class BasicStrategy extends Strategy{
 
     public void playHand(Hand hand, Deck deck, Hand dealerHand, Player player, int currentHand, Rules rules) {
         boolean isRoundOver = false;
-
+        rules.isS17();
         if (player.getHands().size() > 1 && hand.getCards().size() == 2 && hand.getCards().getFirst() == 11) {
             if (hand.getCards().get(1) != 11 || (hand.getCards().get(1) == 11 && !rules.isRSA())) isRoundOver = true;
         }
@@ -259,10 +259,12 @@ public class BasicStrategy extends Strategy{
                             }
                             isRoundOver = true;
                         } else isRoundOver = true;
-                    } else if (hand.getValue() == 19 && (rules.getTotalDecks() == 1 || !rules.isS17()) && rules.getDoubleLimit() == 0 && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
-                        player.doubleDown(currentHand);
-                        player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
-                        deck.dealCard(hand);
+                    } else if (hand.getValue() == 19) {
+                        if (dealerHand.getCards().getFirst() == 6 && (rules.getTotalDecks() == 1 || !rules.isS17()) && rules.getDoubleLimit() == 0 && (rules.isDAS() || (!rules.isDAS() && player.getHands().size() == 1))) {
+                            player.doubleDown(currentHand);
+                            player.getStrategy().addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
+                            deck.dealCard(hand);
+                        }
                         isRoundOver = true;
                     } else isRoundOver = true;
                 } else {

@@ -7,9 +7,7 @@ public class Main {
         final int totalOtherPlayers = 0;
         final int totalRounds = 10000000;
         final LinkedList<Integer> initialCards = new LinkedList<>();
-        double progress;
         int currentRound = 0;
-        int progressRounded;
         int tempInt;
 
         Rules rules = new Rules(true, true, false, false, true, 1.5, 0.2, 1, 0, 3, 4, 5000, 10, 6); // Establish game rules.
@@ -81,15 +79,16 @@ public class Main {
                             }
                             else playHand(value, deck, dealer, 0, rules);
 
-                            for (int i = 0; i < players.length; i++) {
-                                if (players[i] != null && players[i] != value) {
+                            for (Player item : players) {
+                                if (item != null && item != value) {
                                     for (int j = 0; j < value.getHands().size(); j++) {
                                         for (int k = 0; k < value.getHands().get(j).getCards().size(); k++) {
                                             if (value.getHands().size() > 1) {
-                                                if ((j == 0 || j == 1) && k >= 1) players[i].getStrategy().addCardToCount(value.getHands().get(j).getCards().get(k), deck.getShoe().size());
-                                            }
-                                            else {
-                                                if (k >= 2) players[i].getStrategy().addCardToCount(value.getHands().get(j).getCards().get(k), deck.getShoe().size());
+                                                if ((j == 0 || j == 1) && k >= 1)
+                                                    item.getStrategy().addCardToCount(value.getHands().get(j).getCards().get(k), deck.getShoe().size());
+                                            } else {
+                                                if (k >= 2)
+                                                    item.getStrategy().addCardToCount(value.getHands().get(j).getCards().get(k), deck.getShoe().size());
                                             }
                                         }
                                     }
@@ -101,7 +100,9 @@ public class Main {
                     dealer.getStrategy().playHand(dealer.getHands().getFirst(), deck, dealer.getHands().getFirst(), dealer, 0, rules); // After all hands are played, dealer plays hand.
 
                     // Add dealer's cards to player counts.
-                    for (int i = 0; i < players.length; i++) if (players[i] != null) for (int j = 1; j < dealer.getHands().getFirst().getCards().size(); j++) players[i].getStrategy().addCardToCount(dealer.getHands().getFirst().getCards().get(j), deck.getShoe().size());
+                    for (Player item : players)
+                        if (item != null) for (int j = 1; j < dealer.getHands().getFirst().getCards().size(); j++)
+                            item.getStrategy().addCardToCount(dealer.getHands().getFirst().getCards().get(j), deck.getShoe().size());
 
                     // All hands are compared to the dealer's.
                     // If a player's hand is greater than the dealer's without going over 21, he/she wins.
@@ -123,17 +124,13 @@ public class Main {
                     dealer.resetRound(deck); // Dealer clears hands and wagers.
                 }
 
-                //System.out.println("Running count: " + player.getStrategy().getRunningCount());
-                //System.out.println("True count: " + player.getStrategy().getTrueCount() + "\n");
                 currentRound++;
                 tempInt++;
-                //progress = (currentRound / (double) totalRounds) * 100;
-                //progressRounded = (int) Math.round(progress);
-                //System.out.println(progressRounded + "% complete");
             }
             else {
                 deck.shuffle(rules.getBurnCards());
-                for (int i = 0; i < players.length; i++) if (players[i] != null) players[i].getStrategy().resetCount(); // Revert all player counts to 0.
+                for (Player value : players)
+                    if (value != null) value.getStrategy().resetCount(); // Revert all player counts to 0.
                 tempInt = 0;
             }
         }

@@ -24,10 +24,6 @@ public class Deck {
         hand.addCard(shoe.pop());
     }
 
-    public Stack<Integer> getDiscardTray() {
-        return discardTray;
-    }
-
     public Stack<Integer> getShoe() {
         return shoe;
     }

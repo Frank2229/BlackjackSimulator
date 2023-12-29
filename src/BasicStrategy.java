@@ -13,7 +13,7 @@ public class BasicStrategy extends Strategy{
 
     public void playHand(Hand hand, Deck deck, Hand dealerHand, Player player, int currentHand, Rules rules) {
         boolean isRoundOver = false;
-        rules.isS17();
+
         if (player.getHands().size() > 1 && hand.getCards().size() == 2 && hand.getCards().getFirst() == 11) {
             if (hand.getCards().get(1) != 11 || (hand.getCards().get(1) == 11 && !rules.isRSA())) isRoundOver = true;
         }

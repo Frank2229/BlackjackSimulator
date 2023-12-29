@@ -20,11 +20,8 @@ public class Deck {
         shuffle(rules.getBurnCards());
     }
 
-    public int dealCard() {
-        int temp = shoe.peek();
-        discardTray.add(shoe.pop());
-
-        return temp;
+    public void dealCard(Hand hand) {
+        hand.addCard(shoe.pop());
     }
 
     public Stack<Integer> getDiscardTray() {
@@ -33,6 +30,10 @@ public class Deck {
 
     public Stack<Integer> getShoe() {
         return shoe;
+    }
+
+    public void discardCards(Hand hand) {
+        while (!hand.getCards().isEmpty()) discardTray.add(hand.getCards().pop());
     }
 
     // All cards from discard tray are moved back to the shoe and shuffled.

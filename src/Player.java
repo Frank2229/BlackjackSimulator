@@ -43,7 +43,7 @@ public class Player {
 
     public void doubleDown(int currentHand) {
         totalWagers += initialWager;
-        wagers.set(currentHand, wagers.get(currentHand) * 2);
+        wagers.set(currentHand, wagers.get(currentHand) + initialWager);
     }
 
     public LinkedList<Hand> getHands() {
@@ -82,6 +82,7 @@ public class Player {
     }
 
     public void resetRound(Deck deck) {
+        for (Hand hand : hands) deck.discardCards(hand);
         wagers.clear();
         hands.clear();
         hands.add(new Hand());
@@ -94,7 +95,7 @@ public class Player {
         hands.getLast().addCard(hands.get(currentHand).getCards().pop());
         hands.get(currentHand).decreaseValue(hands.get(currentHand).getCards().getFirst());
         strategy.addCardToCount(deck.getShoe().peek(), deck.getShoe().size());
-        hands.getLast().addCard(deck.dealCard());
+        deck.dealCard(hands.getLast());
         wagers.add(initialWager);
         totalWagers += initialWager;
         if (hands.get(currentHand).getCards().getFirst() == 11) hands.get(currentHand).increaseValue();

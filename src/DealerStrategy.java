@@ -13,10 +13,10 @@ public class DealerStrategy extends Strategy{
         // If hand is equal to 17, the dealer only takes another card if the rules specify the dealer is supposed to hit
         // on soft 17 and has 1 or more soft cards.
         while (!isRoundOver) {
-            if (hand.getValue() < 17) hand.addCard(deck.dealCard());
+            if (hand.getValue() < 17) deck.dealCard(hand);
             else if (hand.getValue() > 17) isRoundOver = true;
             else {
-                if (hand.getSoftCards() > 0 && !rules.isS17()) hand.addCard(deck.dealCard());
+                if (hand.getSoftCards() > 0 && !rules.isS17()) deck.dealCard(hand);
                 else isRoundOver = true;
             }
         }

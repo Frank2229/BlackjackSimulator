@@ -4,15 +4,15 @@ public class Main {
     public static void main(String[] args) {
         // SIMULATION PARAMETERS
         final int playerSeat = 2;
-        final int totalOtherPlayers = 3;
-        final int totalRounds = 1000000;
+        final int totalOtherPlayers = 0;
+        final int totalRounds = 10000000;
         final LinkedList<Integer> initialCards = new LinkedList<>();
         double progress;
         int currentRound = 0;
         int progressRounded;
         int tempInt;
 
-        Rules rules = new Rules(true, false, true, true, 1.5, 0.2, 1, 0, 3, 5000, 10, 8); // Establish game rules.
+        Rules rules = new Rules(true, false, true, false, 1.5, 0.25, 1, 0, 3, 5000, 10, 8); // Establish game rules.
 
         // PLAYER SETUP
         final Player player = new Player("BASIC STRATEGY");
@@ -36,17 +36,16 @@ public class Main {
         while (currentRound < totalRounds) {
             if (deck.getShoe().size() / (rules.getTotalDecks() * 52.0) > rules.getPenetration() && player.getStrategy().getTrueCount() >= -4) {
                 for (Player value : players) if (value != null) value.placeWager(rules.getTableMin(), rules.getTableMax()); // Place wagers.
-                //System.out.println("Wager: " + player.getWagers().getFirst());
 
                 // Deal initial two cards.
                 for (int j = 0; j < 2; j++) {
                     for (Player value : players) if (value != null) {
                         initialCards.add(deck.getShoe().peek());
-                        value.getHands().getFirst().addCard(deck.dealCard());
+                        deck.dealCard(value.getHands().getFirst());
                     }
 
                     if (j == 0) initialCards.add(deck.getShoe().peek());
-                    dealer.getHands().getFirst().addCard(deck.dealCard());
+                    deck.dealCard(dealer.getHands().getFirst());
                 }
 
                 // If dealer has an 11 showing, offer insurance.
@@ -105,7 +104,7 @@ public class Main {
                     for (int i = 0; i < players.length; i++) if (players[i] != null) for (int j = 1; j < dealer.getHands().getFirst().getCards().size(); j++) players[i].getStrategy().addCardToCount(dealer.getHands().getFirst().getCards().get(j), deck.getShoe().size());
 
                     /*
-                    if (player.getHands().size() > 2 && player.getHands().getFirst().getCards().getFirst() == 11) {
+                    if (player.getHands().size() > 1) {
                         LinkedList<String> playerHandsStrings = new LinkedList<>();
                         StringBuilder tempString;
                         for (int i = 0; i < player.getHands().size(); i++) {
@@ -126,8 +125,10 @@ public class Main {
                         dealerHandString += tempString;
                         System.out.println(dealerHandString);
                         System.out.println(dealer.getHands().getFirst().getValue());
-                        for (int i = 0; i < player.getWagers().size(); i++) System.out.println(player.getWagers().get(i));
+                        for (int i = 0; i < player.getWagers().size(); i++) System.out.println("Wager " + (i + 1) + ": " + player.getWagers().get(i));
+                        System.out.println("Total Wagers: " + player.getTotalWagers());
                     }
+
                      */
 
                     // All hands are compared to the dealer's.
@@ -140,10 +141,10 @@ public class Main {
                                         value.addWinsLosses(value.getWagers().get(j));
                                     else if (value.getHands().get(j).getValue() > 21 || (value.getHands().get(j).getValue() < dealer.getHands().getFirst().getValue() && dealer.getHands().getFirst().getValue() <= 21))
                                         value.addWinsLosses(-1 * value.getWagers().get(j));
-
-                                    value.resetRound(deck); // Player clears hands and wagers.
                                 }
                             }
+
+                            value.resetRound(deck); // Player clears hands and wagers.
                         }
                     }
 
